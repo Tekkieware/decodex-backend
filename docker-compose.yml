@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  ingress:
+    build: ./ingress
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  analysis:
+    build: ./analysis
+    depends_on:
+      - redis
+
+  websocket:
+    build: ./websocket
+    ports:
+      - "8765:8765"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
