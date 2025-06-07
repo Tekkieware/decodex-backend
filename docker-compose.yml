@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   ingress:
     build: ./ingress
@@ -10,13 +8,6 @@ services:
 
   analysis:
     build: ./analysis
-    depends_on:
-      - redis
-
-  websocket:
-    build: ./websocket
-    ports:
-      - "8765:8765"
     depends_on:
       - redis
 
