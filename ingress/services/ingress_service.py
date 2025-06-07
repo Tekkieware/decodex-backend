@@ -1,43 +1,55 @@
+import json
+import uuid
+import logging
 from typing import Dict, Any
+
 from models.message import Message
 from adapters.redis_adapter import RedisAdapter
-import logging
+from adapters.websocket_adapter import WebSocketAdapter
 
-# Set up logging for better observability
 logger = logging.getLogger(__name__)
-
-# Create a Redis adapter instance (you may want to reuse this in a broader context)
 redis_adapter = RedisAdapter()
 
+
 async def process_message(message: Dict[str, Any]) -> Dict[str, str]:
-    """
-    Process an incoming message by validating and publishing it to the Redis 'code_channel'.
-
-    Args:
-        message (dict): A dictionary containing 'code', 'language', and 'user_id'.
-
-    Returns:
-        dict: A status response indicating success or failure.
-    """
     required_keys = {"code", "language", "user_id"}
-
-    # Validate that all required keys are present
     if not required_keys.issubset(message):
         missing = required_keys - message.keys()
-        logger.warning(f"Missing fields in message: {missing}")
         return {"status": "error", "detail": f"Missing fields: {', '.join(missing)}"}
 
     try:
-        # Construct the Message object
+        # Generate unique analysis_id
+        analysis_id = str(uuid.uuid4())
+        message["analysis_id"] = analysis_id
+
         msg = Message(**message)
-
-        # Publish serialized message to Redis
         redis_adapter.publish("code_channel", msg.json())
-
-        logger.info(f"Message from user {msg.user_id} published to code_channel.")
-        return {"status": "sent"}
+        return {"status": "sent", "analysis_id": analysis_id}
 
     except Exception as e:
-        # Log and return error if processing fails
-        logger.error(f"Failed to process message: {e}", exc_info=True)
         return {"status": "error", "detail": str(e)}
+
+
+async def listen_to_results(ws_adapter: WebSocketAdapter):
+    pubsub = redis_adapter.subscribe("result_channel")
+    if pubsub is None:
+        logger.error("Failed to subscribe to result_channel.")
+        return
+
+    import asyncio
+    logger.info("Subscribed to result_channel, waiting for messages...")
+
+    while True:
+        message = await asyncio.to_thread(pubsub.get_message, timeout=1.0)
+        if message and message['type'] == 'message':
+            try:
+                data = json.loads(message['data'])
+                analysis_id = data.get("analysis_id")
+                if analysis_id:
+                    await ws_adapter.send_to_analysis(analysis_id, json.dumps(data))
+                else:
+                    logger.warning("Result message missing analysis_id.")
+            except Exception as e:
+                logger.error(f"Error processing result message: {e}", exc_info=True)
+
+        await asyncio.sleep(0.1)

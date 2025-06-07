@@ -4,10 +4,10 @@ import json
 class Message:
     """
     Represents a message containing code to be analyzed, its programming language,
-    and the ID of the user who submitted it.
+    the ID of the user who submitted it, and a unique analysis ID.
     """
 
-    def __init__(self, code: str, language: str, user_id: str):
+    def __init__(self, code: str, language: str, user_id: str, analysis_id: str):
         """
         Initialize a new Message instance.
 
@@ -15,10 +15,12 @@ class Message:
             code (str): The code to be analyzed.
             language (str): The programming language of the code.
             user_id (str): The ID of the user submitting the code.
+            analysis_id (str): The unique ID for this analysis.
         """
         self.code = code
         self.language = language
         self.user_id = user_id
+        self.analysis_id = analysis_id
 
     # --- code property ---
     @property
@@ -59,6 +61,19 @@ class Message:
             raise TypeError("user_id must be a string")
         self._user_id = value
 
+    # --- analysis_id property ---
+    @property
+    def analysis_id(self) -> str:
+        """Return the unique analysis ID."""
+        return self._analysis_id
+
+    @analysis_id.setter
+    def analysis_id(self, value: str) -> None:
+        """Set the analysis ID, validating input type."""
+        if not isinstance(value, str):
+            raise TypeError("analysis_id must be a string")
+        self._analysis_id = value
+
     def json(self, pretty: bool = False) -> str:
         """
         Return a JSON representation of the message.
@@ -72,7 +87,8 @@ class Message:
         data = {
             "code": self._code,
             "language": self._language,
-            "user_id": self._user_id
+            "user_id": self._user_id,
+            "analysis_id": self._analysis_id
         }
         return json.dumps(data, indent=2 if pretty else None)
 
@@ -83,4 +99,5 @@ class Message:
         Returns:
             str: Debug-friendly string.
         """
-        return f"Message(user_id='{self._user_id}', language='{self._language}', code=<code>)"
+        return (f"Message(user_id='{self._user_id}', analysis_id='{self._analysis_id}', "
+                f"language='{self._language}', code=<code>)")
