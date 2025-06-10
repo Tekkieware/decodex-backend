@@ -28,28 +28,3 @@ async def process_message(message: Dict[str, Any]) -> Dict[str, str]:
 
     except Exception as e:
         return {"status": "error", "detail": str(e)}
-
-
-async def listen_to_results(websocket_adapter: WebSocketAdapter):
-    pubsub = redis_adapter.subscribe("result_channel")
-    if pubsub is None:
-        logger.error("Failed to subscribe to result_channel.")
-        return
-
-    import asyncio
-    logger.info("Subscribed to result_channel, waiting for messages...")
-
-    while True:
-        message = await asyncio.to_thread(pubsub.get_message, timeout=1.0)
-        if message and message['type'] == 'message':
-            try:
-                data = json.loads(message['data'])
-                analysis_id = data.get("analysis_id")
-                if analysis_id:
-                    await websocket_adapter.send_to_analysis(analysis_id, json.dumps(data))
-                else:
-                    logger.warning("Result message missing analysis_id.")
-            except Exception as e:
-                logger.error(f"Error processing result message: {e}", exc_info=True)
-
-        await asyncio.sleep(0.1)
