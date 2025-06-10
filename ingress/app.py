@@ -30,7 +30,7 @@ async def process_message(message: Dict[str, Any]) -> Dict[str, str]:
         return {"status": "error", "detail": str(e)}
 
 
-async def listen_to_results(ws_adapter: WebSocketAdapter):
+async def listen_to_results(websocket_adapter: WebSocketAdapter):
     pubsub = redis_adapter.subscribe("result_channel")
     if pubsub is None:
         logger.error("Failed to subscribe to result_channel.")
@@ -46,7 +46,7 @@ async def listen_to_results(ws_adapter: WebSocketAdapter):
                 data = json.loads(message['data'])
                 analysis_id = data.get("analysis_id")
                 if analysis_id:
-                    await ws_adapter.send_to_analysis(analysis_id, json.dumps(data))
+                    await websocket_adapter.send_to_analysis(analysis_id, json.dumps(data))
                 else:
                     logger.warning("Result message missing analysis_id.")
             except Exception as e:
