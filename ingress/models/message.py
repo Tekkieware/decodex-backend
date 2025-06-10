@@ -7,19 +7,17 @@ class Message:
     the ID of the user who submitted it, and a unique analysis ID.
     """
 
-    def __init__(self, code: str, language: str, user_id: str, analysis_id: str):
+    def __init__(self, code: str, language: str,analysis_id: str):
         """
         Initialize a new Message instance.
 
         Args:
             code (str): The code to be analyzed.
             language (str): The programming language of the code.
-            user_id (str): The ID of the user submitting the code.
             analysis_id (str): The unique ID for this analysis.
         """
         self.code = code
         self.language = language
-        self.user_id = user_id
         self.analysis_id = analysis_id
 
     # --- code property ---
@@ -48,18 +46,6 @@ class Message:
             raise TypeError("language must be a string")
         self._language = value
 
-    # --- user_id property ---
-    @property
-    def user_id(self) -> str:
-        """Return the ID of the user who submitted the code."""
-        return self._user_id
-
-    @user_id.setter
-    def user_id(self, value: str) -> None:
-        """Set the user ID, validating input type."""
-        if not isinstance(value, str):
-            raise TypeError("user_id must be a string")
-        self._user_id = value
 
     # --- analysis_id property ---
     @property
@@ -87,7 +73,6 @@ class Message:
         data = {
             "code": self._code,
             "language": self._language,
-            "user_id": self._user_id,
             "analysis_id": self._analysis_id
         }
         return json.dumps(data, indent=2 if pretty else None)
@@ -99,5 +84,5 @@ class Message:
         Returns:
             str: Debug-friendly string.
         """
-        return (f"Message(user_id='{self._user_id}', analysis_id='{self._analysis_id}', "
+        return (f"Message(analysis_id='{self._analysis_id}', "
                 f"language='{self._language}', code=<code>)")

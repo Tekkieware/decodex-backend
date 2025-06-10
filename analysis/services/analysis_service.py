@@ -28,21 +28,20 @@ def start_analysis() -> None:
         try:
             data = json.loads(message['data'])
 
-            if not all(key in data for key in ["code", "user_id", "analysis_id"]):
-                print("Invalid message: missing 'code', 'user_id' or 'analysis_id'")
+            if not all(key in data for key in ["code", "analysis_id"]):
+                print("Invalid message: missing 'code' or 'analysis_id'")
                 continue
 
             result = fake_analysis(data["code"])
 
             analysis_result = AnalysisResult(
-                user_id=data["user_id"],
                 analysis_id=data["analysis_id"],
                 passed=result["passed"],
                 errors=result["errors"]
             )
 
             redis_adapter.publish("result_channel", analysis_result.json())
-            print(f"Published result for user {data['user_id']} - Analysis ID: {data['analysis_id']}")
+            print(f"Published result for analysis with Analysis ID: {data['analysis_id']}")
 
         except (json.JSONDecodeError, KeyError, TypeError) as e:
             print(f"Error processing message: {e}")

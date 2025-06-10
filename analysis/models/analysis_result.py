@@ -3,21 +3,12 @@ from typing import List
 
 
 class AnalysisResult:
-    def __init__(self, user_id: str, analysis_id: str, passed: bool, errors: List[str]):
-        self._user_id = user_id
+    def __init__(self, analysis_id: str, passed: bool, errors: List[str]):
         self._analysis_id = analysis_id
         self._passed = passed
         self._errors = errors
 
-    @property
-    def user_id(self) -> str:
-        return self._user_id
 
-    @user_id.setter
-    def user_id(self, value: str):
-        if not isinstance(value, str):
-            raise TypeError("user_id must be a string")
-        self._user_id = value
 
     @property
     def analysis_id(self) -> str:
@@ -51,7 +42,6 @@ class AnalysisResult:
 
     def json(self, pretty: bool = False) -> str:
         data = {
-            "user_id": self._user_id,
             "analysis_id": self._analysis_id,
             "passed": self._passed,
             "errors": self._errors
@@ -59,4 +49,4 @@ class AnalysisResult:
         return json.dumps(data, indent=2 if pretty else None)
 
     def __repr__(self) -> str:
-        return f"AnalysisResult(user_id='{self._user_id}', analysis_id='{self._analysis_id}', passed={self._passed}, errors={self._errors})"
+        return f"AnalysisResult(analysis_id='{self._analysis_id}', passed={self._passed}, errors={self._errors})"

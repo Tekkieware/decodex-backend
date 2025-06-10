@@ -12,7 +12,7 @@ redis_adapter = RedisAdapter()
 
 
 async def process_message(message: Dict[str, Any]) -> Dict[str, str]:
-    required_keys = {"code", "language", "user_id"}
+    required_keys = {"code", "language"}
     if not required_keys.issubset(message):
         missing = required_keys - message.keys()
         return {"status": "error", "detail": f"Missing fields: {', '.join(missing)}"}

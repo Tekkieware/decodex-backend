@@ -3,6 +3,6 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_process_message():
-    message = {"code": "print('Hello')", "language": "python", "user_id": "u1"}
+    message = {"code": "print('Hello')", "language": "python"}
     response = await process_message(message)
     assert response["status"] == "sent"
