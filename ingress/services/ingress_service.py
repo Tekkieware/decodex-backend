@@ -18,7 +18,6 @@ async def process_message(message: Dict[str, Any]) -> Dict[str, str]:
         return {"status": "error", "detail": f"Missing fields: {', '.join(missing)}"}
 
     try:
-        # Generate unique analysis_id
         analysis_id = str(uuid.uuid4())
         message["analysis_id"] = analysis_id
 
