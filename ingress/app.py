@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 
-from .services.ingress_service import process_message  
+from services.ingress_service import process_message  
 
 app = FastAPI()
 
