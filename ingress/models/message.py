@@ -3,21 +3,18 @@ import json
 
 class Message:
     """
-    Represents a message containing code to be analyzed, its programming language,
-    the ID of the user who submitted it, and a unique analysis ID.
+    Represents a message containing code to be analyzed and a unique analysis ID.
     """
 
-    def __init__(self, code: str, language: str,analysis_id: str):
+    def __init__(self, code: str, analysis_id: str):
         """
         Initialize a new Message instance.
 
         Args:
             code (str): The code to be analyzed.
-            language (str): The programming language of the code.
             analysis_id (str): The unique ID for this analysis.
         """
         self.code = code
-        self.language = language
         self.analysis_id = analysis_id
 
     # --- code property ---
@@ -32,20 +29,6 @@ class Message:
         if not isinstance(value, str):
             raise TypeError("code must be a string")
         self._code = value
-
-    # --- language property ---
-    @property
-    def language(self) -> str:
-        """Return the language of the code."""
-        return self._language
-
-    @language.setter
-    def language(self, value: str) -> None:
-        """Set the language of the code, validating input type."""
-        if not isinstance(value, str):
-            raise TypeError("language must be a string")
-        self._language = value
-
 
     # --- analysis_id property ---
     @property
@@ -72,7 +55,6 @@ class Message:
         """
         data = {
             "code": self._code,
-            "language": self._language,
             "analysis_id": self._analysis_id
         }
         return json.dumps(data, indent=2 if pretty else None)
@@ -84,5 +66,4 @@ class Message:
         Returns:
             str: Debug-friendly string.
         """
-        return (f"Message(analysis_id='{self._analysis_id}', "
-                f"language='{self._language}', code=<code>)")
+        return f"Message(analysis_id='{self._analysis_id}', code=<code>)"

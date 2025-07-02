@@ -55,7 +55,7 @@ async def analyze_code_with_openrouter(code: str) -> Dict[str, Any]:
     """
 
     body = {
-        "model": "openai/gpt-4",  # Or another OpenRouter-compatible model
+        "model": "openai/gpt-4",  
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.2,
     }
