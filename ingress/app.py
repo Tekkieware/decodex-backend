@@ -2,10 +2,19 @@ from fastapi import FastAPI, Request, HTTPException, WebSocket, WebSocketDisconn
 from fastapi.responses import JSONResponse
 from services.ingress_service import process_message, listen_to_results
 from adapters.websocket_adapter import WebSocketAdapter
+from fastapi.middleware.cors import CORSMiddleware
 
 import asyncio
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Shared WebSocket adapter
 websocket_adapter = WebSocketAdapter()
