@@ -47,7 +47,6 @@ async def websocket_endpoint(websocket: WebSocket, analysis_id: str):
     await websocket_adapter.connect(websocket, analysis_id)
     try:
         while True:
-            # Keep connection alive, can handle pings or client messages if needed
             await websocket.receive_text()
     except WebSocketDisconnect:
         websocket_adapter.disconnect(websocket, analysis_id)
