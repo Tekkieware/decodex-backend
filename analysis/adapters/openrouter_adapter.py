@@ -22,7 +22,7 @@ async def analyze_code_with_openrouter(code: str) -> Dict[str, Any]:
     prompt = f"""
     You are an expert programming assistant. Carefully analyze the following code and return a detailed JSON response with the following keys:
 
-    1. **language**: Identify the programming language of the code. Be precise — e.g., "JavaScript", "TypeScript", "Python", "C++". Explain how you inferred the language.
+    1. **detected_language**: Identify the programming language of the code. Be precise — e.g., "JavaScript", "TypeScript", "Python", "C++". 
 
     2. **summary**: Write a high-level overview of what the entire code does. Summarize its purpose and behavior concisely and clearly.
 
@@ -55,7 +55,7 @@ async def analyze_code_with_openrouter(code: str) -> Dict[str, Any]:
     """
 
     body = {
-        "model": "openai/gpt-4o-mini",  
+        "model": "deepseek/deepseek-r1:free",  
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.2,
     }
@@ -79,7 +79,7 @@ async def analyze_code_with_openrouter(code: str) -> Dict[str, Any]:
     except Exception as e:
         print(f"[OpenRouter Error] {e}")
         return {
-            "language": None,
+            "detected_language": None,
             "summary": None,
             "functions": [],
             "variables": [],
