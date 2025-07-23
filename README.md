@@ -103,18 +103,10 @@ Stop the containers:
 docker compose down
 ```
 
----
-
-
----
 
 ## Notes
 
 - Ensure the `OPEN_ROUTER_API_URL` environment variable is set, or the AI-powered analysis features will not work.
-- The backend automatically integrates with the [DeCodeX Frontend](https://github.com/Tekkieware/decodex) when both are running.
-
----
-
 
 ---
 
