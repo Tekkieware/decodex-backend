@@ -1,0 +1,37 @@
+version: "1"
+
+services:
+  - type: web
+    name: ingress
+    runtime: docker
+    plan: free
+    repo: https://github.com/Tekkieware/decodex-backend
+    rootDir: ./ingress
+    branch: main
+    autoDeploy: true
+    envVars:
+      - fromGroup: app-env
+    healthCheckPath: /
+
+  - type: worker
+    name: analysis
+    runtime: docker
+    plan: free
+    repo: https://github.com/Tekkieware/decodex-backend
+    rootDir: ./analysis
+    branch: main
+    autoDeploy: true
+    envVars:
+      - fromGroup: app-env
+
+  - type: keyvalue
+    name: redis
+    plan: free
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: Allow all
+    maxmemoryPolicy: noeviction
+
+envVarGroups:
+  - name: app-env
+    envVars: []
