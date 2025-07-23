@@ -26,7 +26,6 @@ The **frontend repository** for this project can be found here:
 - Real-time updates via WebSockets.
 - Redis-based task queue for managing background processing.
 - Containerized with Docker for consistent development and deployment.
-- Configurable AI provider integration using `OPEN_ROUTER_API_URL`.
 
 ---
 
