@@ -16,21 +16,6 @@ services:
           property: connectionString
     healthCheckPath: /
 
-  - type: worker
-    name: analysis
-    runtime: docker
-    plan: free
-    repo: https://github.com/Tekkieware/decodex-backend
-    rootDir: ./analysis
-    branch: main
-    autoDeploy: true
-    envVars:
-      - fromGroup: app-env
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: redis
-          property: connectionString
 
   - type: keyvalue
     name: redis
