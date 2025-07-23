@@ -20,6 +20,10 @@ app.add_middleware(
 websocket_adapter = WebSocketAdapter()
 
 
+@app.get("/")
+def health_check():
+    return {"status": "ok", "message": "Ingress service running"}
+
 @app.on_event("startup")
 async def startup_event():
     # Start the listener to broadcast analysis results via WebSocket
