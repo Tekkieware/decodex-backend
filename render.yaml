@@ -1,5 +1,3 @@
-version: "1"
-
 services:
   - type: web
     name: ingress
@@ -11,6 +9,11 @@ services:
     autoDeploy: true
     envVars:
       - fromGroup: app-env
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: redis
+          property: connectionString
     healthCheckPath: /
 
   - type: worker
@@ -23,6 +26,11 @@ services:
     autoDeploy: true
     envVars:
       - fromGroup: app-env
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: redis
+          property: connectionString
 
   - type: keyvalue
     name: redis

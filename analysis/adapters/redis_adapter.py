@@ -1,14 +1,26 @@
+import os
 import redis
-from typing import Any, Optional
+from typing import Optional
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
 class RedisAdapter:
     def __init__(self, host: str = 'redis', port: int = 6379, db: int = 0):
         """
-        Initialize the Redis client with the given host, port, and database index.
-        Defaults to host='redis', port=6379, db=0.
+        Initialize the Redis client.
+        Connects to Redis using the REDIS_URL environment variable if available (for production).
+        Falls back to host, port, and db parameters for local development.
         """
-        self.client = redis.Redis(host=host, port=port, db=db)
+        redis_url = os.getenv("REDIS_URL")
+        if redis_url:
+            self.client = redis.from_url(redis_url)
+            print("Connected to Redis via URL.")
+        else:
+            self.client = redis.Redis(host=host, port=port, db=db)
+            print(f"Connected to local Redis at {host}:{port}.")
+
 
     def publish(self, channel: str, message: str) -> None:
         """
